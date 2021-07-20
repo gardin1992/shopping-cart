@@ -7,6 +7,12 @@
   "author": "Joao Gardin <gardin1992@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.3.3",
+    "@types/react": "^17.0.14",
+    "@types/react-dom": "^17.0.9",
+    "classnames": "^2.3.1",
+    "dotenv": "^8.2.0",
     "mini.css": "^3.0.1",
     "react": "^17.0.2",
     "react-ace": "^9.4.0",
@@ -14,9 +20,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.3",
-    "web-vitals": "^1.0.1",
-    "classnames": "^2.3.1",
-    "dotenv": "^8.2.0"
+    "typescript": "^4.3.5",
+    "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
