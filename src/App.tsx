@@ -1,4 +1,7 @@
 import React from 'react';
+import Header from './components/header';
+import Home from './screens/Home';
+import ShoppingCart from './screens/ShoppingCart';
 
 interface User {
   name: string;
@@ -53,7 +56,12 @@ function App() {
   }, [productList])
 
   return (
-    <div>App</div>
+    <div>
+      <Header />
+
+      <Home />
+      <ShoppingCart />
+    </div>
   );
 }
 
