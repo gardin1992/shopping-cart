@@ -13,31 +13,10 @@ import store from './store'
 import { Provider } from 'react-redux'
 
 function App() {
-
-
   return (
     <Provider store={store}>
       <Router>
         <div>
-
-          <div>
-            <div>
-              <button
-                aria-label="Increment value"
-                // onClick={() => dispatch(increment())}
-              >
-                Increment
-              </button>
-              {/* <span>{count}</span> */}
-              <button
-                aria-label="Decrement value"
-                // onClick={() => dispatch(decrement())}
-              >
-                Decrement
-              </button>
-            </div>
-          </div>
-
           <Header />
           <Switch>
             <Route exact={true} path={`/`}>

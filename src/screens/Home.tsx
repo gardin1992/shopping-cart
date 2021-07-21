@@ -3,7 +3,7 @@ import { Redirect, useHistory } from "react-router-dom";
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import { decrement, increment } from '../reducers/shoppingCartSlicer';
+import { addItem } from '../reducers/shoppingCartSlicer';
 
 
 
@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import Banner from "../components/banner";
 import ProductShowcase from "../components/product/product-showcase/ProductShowcase";
-import { IProduct } from "../interfaces";
+import { IProduct, IShoppingCart } from "../interfaces";
 
 
 const product: IProduct = {
@@ -62,43 +62,21 @@ function Home() {
     }, [productList])
 
 
+    // const shoppingCartState = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart)
+
     const results = productList.length ?? 0;
 
-    const [shoppingCartItems, setShoppingCartItems] = React.useState<IProduct[]>([])
-
-    const addItemToCart = (product: IProduct) => {
-        const has = shoppingCartItems.some((i: IProduct) => i.id === product.id)
-
-        if (!has) {
-            shoppingCartItems.push(product)
-            setShoppingCartItems(shoppingCartItems)
-        }
-
-        history.push('/carrinho')
-    }
-
-    const count = useSelector((state: { counter: { value: number } }) => state.counter.value)
+    // const [shoppingCartItems, setShoppingCartItems] = React.useState<IProduct[]>([])
 
     const dispatch = useDispatch()
 
+    const addItemToCart = (product: IProduct) => {
+        dispatch(addItem(product))
+        history.push('/carrinho')
+    }
+
+
     return <div>
-
-        <div>
-            <button
-                aria-label="Increment value"
-                onClick={() => dispatch(increment())}
-            >
-                Increment
-            </button>
-            <span>{count}</span>
-            <button
-                aria-label="Decrement value"
-                onClick={() => dispatch(decrement())}
-            >
-                Decrement
-            </button>
-        </div>
-
         <Banner />
 
         <div className="fluid">

@@ -1,16 +1,20 @@
 import * as React from 'react';
-import styled from 'styled-components';
+
 import { IProduct } from '../../../interfaces';
 import { toDecimal } from '../../../mask';
 import Button from '../../button';
 
-const CProductShoppingCart = styled.article`
-    width: 500px;
-`;
+import { ReactComponent as ITrash } from '../../../assets/icons/i-trash.svg';
+import { ReactComponent as IAdd } from '../../../assets/icons/i-add.svg';
+import { ReactComponent as IRemove } from '../../../assets/icons/i-remove.svg';
+
+
+import { CProductShoppingCart } from './styles';
+
 
 function ProductShoppingCart(props: { product: IProduct }) {
 
-    const { title, description, price } = props.product
+    const { title, price, image } = props.product
 
     const [amount, setAmount] = React.useState(0)
     const [total, setTotal] = React.useState(0)
@@ -20,38 +24,40 @@ function ProductShoppingCart(props: { product: IProduct }) {
     }, [amount])
 
     return <CProductShoppingCart>
-        <div>
+        <div className="content">
             <figure>
-                <img src={''} alt={''} title={''} />
+                <img src={image} alt={''} title={''} />
             </figure>
 
-            <h3>{title}</h3>
-            <p>{description}</p>
-
-            <i>Remover</i>
-
-            <p>Valor Unitário</p>
-            <p>${toDecimal(price)}</p>
+            <div >
+                <h3>{title}</h3>
+                <p>Valor Unitário</p>
+                <p className="content-price">${toDecimal(price)}</p>
+            </div>
+            <span className="i-trash"><ITrash /></span>
         </div>
 
         <div className="footer">
             <p>Quantidade</p>
 
-            <span>
-                <Button className="btn-less" onClick={() => {
+            <div className="content-amount">
+                <button className="btn-less" onClick={() => {
                     setAmount(amount - 1)
                 }}>
-                    <i >Less</i>
-                </Button>
+                    <span className="i-remove"><IRemove /></span>
+                </button>
 
-                {amount}
-                <Button className="btn-more" onClick={() => {
+                <span className="amount">
+                    {amount}
+                </span>
+
+                <button className="btn-more" onClick={() => {
                     setAmount(amount + 1)
                 }}>
-                    <i >Plus</i>
-                </Button>
+                    <span className="i-add"><IAdd /></span>
+                </button>
 
-            </span>
+            </div>
 
             <p>$ {toDecimal(total)}</p>
         </div>
