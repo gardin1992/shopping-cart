@@ -58,7 +58,6 @@ function App() {
   return (
     <div>
       <Header />
-
       <Home />
       <ShoppingCart />
     </div>
