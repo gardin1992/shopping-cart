@@ -21,7 +21,13 @@ yarn -i # auternativa para somente instalar
 yarn start # inicia o servidor WEB
 ```
 
-## Lista de Referencia
+### Lista de Referencia
 
-- [Figma Project](https://www.figma.com/file/aG9SZfdnzrF67Gys9hXkQ7/Shopping-Cart?node-id=12%3A437)
-- [Figma Preview](https://www.figma.com/proto/aG9SZfdnzrF67Gys9hXkQ7/Shopping-Cart?node-id=1%3A9&scaling=scale-down&page-id=1%3A5)
+- [Versão 1 do Layout](https://drive.google.com/file/d/1aPXLU2SkbTSmLDj3jwzty6UhXZ9WZJoD/view?usp=sharing)
+
+## Rotas da aplicação
+
+GET - / - Página Inicial - Catalogo
+GET - /carrinho - Página com o carrinho de compras
+GET - /usuario/cadastrar - Página para cadastro de um novo usuário
+GET - /usuario/autenticar - página para realizar login pelo usuário

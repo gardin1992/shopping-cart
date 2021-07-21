@@ -15,6 +15,23 @@ export const CArticle = styled.article`
     box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
     height: 360px;
     overflow: hidden;
+    position: relative;
+
+    &:hover::after {
+        content: "Comprar";
+        width: 320px;
+        height: 360px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: ${theme.colors.alert};
+        opacity: 0.9;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
 
     color: ${theme.colors.primary};
     padding: 20px;

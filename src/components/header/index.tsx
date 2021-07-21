@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import styled from 'styled-components'
 
 import { theme } from '../../styles'
@@ -39,10 +40,18 @@ header {
 function Header() {
     return <CHeader className="flex-center">
         <header className="flex-center">
-            <a href="#" className="logo">Shopping Cart</a>
+            <Link to="/" className='link'>
+                <a href="#" className="logo">Shopping Cart</a>
+            </Link>
+
             <div>
-                <Icon onClick={() => { }} icon={<IShoppingCart />} />
-                <Icon onClick={() => { }} icon={<IUser />} />
+                <Link to="/carrinho" className='link'>
+                    <Icon onClick={() => { }} icon={<IShoppingCart />} />
+                </Link>
+
+                <Link to="/registrar" className='link'>
+                    <Icon onClick={() => { }} icon={<IUser />} />
+                </Link>
             </div>
         </header>
     </CHeader>

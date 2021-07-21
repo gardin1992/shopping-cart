@@ -1,8 +1,18 @@
 import * as React from "react";
+import { Redirect, useHistory } from "react-router-dom";
+
+import { useDispatch, useSelector } from 'react-redux'
+
+import { decrement, increment } from '../reducers/shoppingCartSlicer';
+
+
+
 import styled from 'styled-components'
+
 import Banner from "../components/banner";
-import Product, { IProduct } from "../components/product/Product";
 import ProductShowcase from "../components/product/product-showcase/ProductShowcase";
+import { IProduct } from "../interfaces";
+
 
 const product: IProduct = {
     category: 'cadeira gamer',
@@ -20,33 +30,12 @@ flex-direction: row;
 flex-wrap: wrap;
 `
 
-function Showcase({ items }: { items: IProduct[] }) {
-    const results = items.length ?? 0;
-
-    return <div className="fluid">
-
-        <div className='flex-center'>
-            <span>{results} resultados</span>
-            <h2>Produtos em Destaque</h2>
-
-            <select>
-                <option>Maior Preço</option>
-            </select>
-        </div>
-
-        <CShowcaseItems>
-            {items.map((item: IProduct, index: number) => <ProductShowcase {...item} key={`${index}-${product.id}`} />)}
-        </CShowcaseItems>
-
-        <div>
-            Paginação
-        </div>
-    </div>
-}
-
-
 function Home() {
+
     const [productList, setProductList] = React.useState<IProduct[]>([])
+
+    const history = useHistory();
+
 
     const requestApi = async (callback: (data: IProduct[]) => void) => {
         try {
@@ -72,10 +61,65 @@ function Home() {
         console.log('productList', productList)
     }, [productList])
 
+
+    const results = productList.length ?? 0;
+
+    const [shoppingCartItems, setShoppingCartItems] = React.useState<IProduct[]>([])
+
+    const addItemToCart = (product: IProduct) => {
+        const has = shoppingCartItems.some((i: IProduct) => i.id === product.id)
+
+        if (!has) {
+            shoppingCartItems.push(product)
+            setShoppingCartItems(shoppingCartItems)
+        }
+
+        history.push('/carrinho')
+    }
+
+    const count = useSelector((state: { counter: { value: number } }) => state.counter.value)
+
+    const dispatch = useDispatch()
+
     return <div>
+
+        <div>
+            <button
+                aria-label="Increment value"
+                onClick={() => dispatch(increment())}
+            >
+                Increment
+            </button>
+            <span>{count}</span>
+            <button
+                aria-label="Decrement value"
+                onClick={() => dispatch(decrement())}
+            >
+                Decrement
+            </button>
+        </div>
+
         <Banner />
 
-        <Showcase items={productList} />
+        <div className="fluid">
+
+            <div className='flex-center'>
+                <span>{results} resultados</span>
+                <h2>Produtos em Destaque</h2>
+
+                <select>
+                    <option>Maior Preço</option>
+                </select>
+            </div>
+
+            <CShowcaseItems>
+                {productList.map((item: IProduct, index: number) => <ProductShowcase
+                    {...item}
+                    key={`${index}-${product.id}`}
+                    addItemToCart={addItemToCart}
+                />)}
+            </CShowcaseItems>
+        </div>
     </div>
 }
 
