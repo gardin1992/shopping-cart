@@ -3,6 +3,6 @@ import shoppingCartSlicer from './reducers/shoppingCartSlicer'
 
 export default configureStore({
     reducer: {
-        counter: shoppingCartSlicer
+        shoppingCart: shoppingCartSlicer
     }
 })
