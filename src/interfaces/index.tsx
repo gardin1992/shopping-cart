@@ -10,6 +10,10 @@ export interface IProduct {
     title: string,
 }
 
+export interface IProductShowCase extends IProduct {
+    addItemToCart: (product: IProduct) => void
+}
+
 /**
  * ShoppingCart
  */
