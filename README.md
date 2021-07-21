@@ -31,3 +31,17 @@ GET - / - Página Inicial - Catalogo
 GET - /carrinho - Página com o carrinho de compras
 GET - /usuario/cadastrar - Página para cadastro de um novo usuário
 GET - /usuario/autenticar - página para realizar login pelo usuário
+
+## RoadMap
+
+### A Fazer
+- adicionar as açoes da página do carrinho de compras
+- Página de Logar/Cadastrar Usuário
+- manter os dados no carrinho de compras ao atualizar a página ou abrir a página novamente
+- na pagina inicial adicionar uma animação ao comrar um produto e nao redirecionar para o carrinho, sómente se quiser
+- adicionar os métodos de ordenação dos produtos na pagina inicial
+
+### Feito
+- Listagem dos produtos na página inicial
+- banner na página inicial
+- barra de navegação e os links de acesso
