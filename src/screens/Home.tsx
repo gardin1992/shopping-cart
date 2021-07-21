@@ -1,10 +1,11 @@
 import * as React from "react";
+import Banner from "../components/banner";
 
 
 function Home() {
 
     return <div>
-        <div><h2>Banner</h2></div>
+        <Banner />
 
         <div>
             <h2>Catalogo de Produtos</h2>
