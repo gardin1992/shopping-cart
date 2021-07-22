@@ -11,7 +11,7 @@ export const theme = {
   }
 }
 
-const GlobalStyle = createGlobalStyle<{whiteColor: string}>`
+const GlobalStyle = createGlobalStyle`
   body,
   html,
   body * {
@@ -39,6 +39,12 @@ const GlobalStyle = createGlobalStyle<{whiteColor: string}>`
   .fluid {
     width: 1070px;
     margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 18px;
+    color: ${theme.colors.secondary};
+    margin: 50px 0 30px;
   }
 `
 

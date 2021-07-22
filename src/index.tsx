@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import GlobalStyles from './styles'
 
 ReactDOM.render(<React.StrictMode>
-    <GlobalStyles whiteColor={"#fff"} />
+    <GlobalStyles />
     <App />
 </React.StrictMode>, document.getElementById('root'));
 

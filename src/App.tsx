@@ -12,9 +12,11 @@ import Home from './screens/Home';
 import ShoppingCart from './screens/ShoppingCart';
 import User from './screens/users/User';
 import PrivateRoute from './components/route/PrivateRoute';
-import ConfirmScreen from './screens/checkout/Confirm';
 import PublicRoute from './components/route/PublicRoute';
 import OrderScreen from './screens/orders/OrderScreen';
+import ConfirmScreen from './screens/orders/ConfirmScreen';
+
+import GlobalStyle from './styles';
 
 function App() {
 
