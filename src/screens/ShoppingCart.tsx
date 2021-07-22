@@ -110,6 +110,14 @@ function ShoppingCart() {
     const dispatch = useDispatch()
 
     const handleSendPurchase = () => {
+
+        if (!auth?.user) {
+
+            history.push('/usuario')
+            return false;
+        }
+
+
         const purchase = {
             userId: auth?.user.id,
             user: auth?.user,
