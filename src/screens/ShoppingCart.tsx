@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 
 import ProductShoppingCart from "../components/product/product-shopping-cart";
+import IndexedDbStore from "../helpers/indexedDBStore";
 import { IShoppingCart, IShoppingCartItem } from "../interfaces";
 import { toDecimal } from "../mask";
 import { resetState } from "../reducers/shoppingCartSlicer";
@@ -68,30 +69,12 @@ const CButton = styled.button`
     }
 `
 
-const CButtonLabel = styled.label`
-    width: 100%;
-    height: 60px;
-    margin-top: 100px;
-    background: ${theme.colors.white};
-    border: 1px solid ${theme.colors.secondary};
-    color: ${theme.colors.secondary};
-
-    &:hover {
-        background: ${theme.colors.secondary};
-        border: 1px solid ${theme.colors.white};
-        color: ${theme.colors.white};
-    }
-
-
-    display: FLEX;
-    justify-content: center;
-    align-items: center;
-`
-
-
 function ShoppingCart() {
     const stateItems = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart.items)
+    const auth = useSelector((state: { authentication: any }) => state.authentication)
+
     const history = useHistory()
+    const indexedStore = IndexedDbStore()
 
     const [sale, setSale] = React.useState({
         subTotal: 0,
@@ -127,9 +110,31 @@ function ShoppingCart() {
 
     const dispatch = useDispatch()
 
-    const closeShoppingCart = () => {
-        dispatch(resetState())
-        history.replace('/')
+    const handleSendPurchase = () => {
+        const purchase = {
+            userId: auth?.user.id,
+            user: auth?.user,
+            ...sale,
+            products: stateItems
+        }
+
+        const onSuccess = (e: any) => {
+            const resp = e.target.result
+
+            if (!resp) {
+                alert('Erro ao finalizar compra')
+            } else {
+
+                dispatch(resetState())
+                history.push('/pedidos/confirmar')
+            }
+        }
+
+        const onError = (e: any) => {
+            console.log('erro criar compra', e.target.error);
+        }
+
+        indexedStore.insertData('purchases', purchase, onSuccess, onError)
     }
 
     return <CShoppingCartContent className="fluid">
@@ -164,18 +169,9 @@ function ShoppingCart() {
                     </CPurchaseRow>
                 </div>
 
-                <CButtonLabel htmlFor="modal-control">
+                <CButton onClick={handleSendPurchase}>
                     Finalizar Pedido
-                </CButtonLabel>
-                <input type="checkbox" id="modal-control" className="modal" />
-
-                <div>
-                    <div className="card">
-                        <label htmlFor="modal-control" className="modal-close" onClick={closeShoppingCart} ></label>
-                        <h3 className="section">Obrigado!</h3>
-                        <p className="section">Compra realizada com sucesso!</p>
-                    </div>
-                </div>
+                </CButton>
             </div>
         </CShoppingCart>
     </CShoppingCartContent>

@@ -7,8 +7,8 @@ const initialState: IShoppingCart = {
     totalAmount: 0
 }
 
-export const counterSlice = createSlice({
-    name: 'counter',
+export const shoppingCartSlice = createSlice({
+    name: 'shoppingCart',
     initialState: initialState,
     reducers: {
         addItem: (state, action) => {
@@ -46,6 +46,6 @@ export const counterSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addItem, removeItem, dropItem, resetState } = counterSlice.actions
+export const { addItem, removeItem, dropItem, resetState } = shoppingCartSlice.actions
 
-export default counterSlice.reducer
+export default shoppingCartSlice.reducer

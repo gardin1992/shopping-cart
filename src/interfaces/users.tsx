@@ -6,6 +6,7 @@ export interface IUserLogin {
 export interface IUserRegister {
     name?: string,
     email?: string,
+    cpf?: string,
     password?: string,
     repassword?: string,
     //

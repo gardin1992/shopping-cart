@@ -122,11 +122,27 @@ function IndexedDbStore() {
         }
     }
 
+    const getAll = (
+        storeName: string,
+        onSuccess?: (e: any) => void,
+        onError?: (e: any) => void,) => {
+        if (!!connection) {
+            const transaction = connection.transaction([storeName], "readwrite");
+            const request = transaction.objectStore(storeName).getAll();
+
+            if (!!onSuccess)
+                request.onsuccess = onSuccess;
+
+            if (!!onError)
+                request.onerror = onError;
+        }
+    }
     return {
         connection,
         insertData,
         getDataById,
         getDataByIndex,
+        getAll,
     }
 }
 

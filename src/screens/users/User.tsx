@@ -109,6 +109,10 @@ function User() {
             errors.email = requiredField
         }
 
+        if (!userRegister.cpf) {
+            errors.cpf = requiredField
+        }
+
         if (!userRegister.password || !userRegister.repassword) {
             errors.password = errors.repassword = requiredField
         } else if (userRegister.password !== userRegister.repassword) {
@@ -249,6 +253,17 @@ function User() {
                 }}
                 type="text"
                 error={userRegisterErrors.name}
+            />
+
+            <Input
+                placeholder="CPF"
+                name="cpf"
+                value={userRegister.cpf}
+                onChange={(e: any) => {
+                    setUserRegister(prev => ({ ...prev, cpf: e.target.value }))
+                }}
+                type="text"
+                error={userRegisterErrors.cpf}
             />
 
             <Input
