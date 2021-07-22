@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import { IProduct } from '../../../interfaces';
+import { IShoppingCartItem } from '../../../interfaces';
 import { toDecimal } from '../../../mask';
-import Button from '../../button';
 
 import { ReactComponent as ITrash } from '../../../assets/icons/i-trash.svg';
 import { ReactComponent as IAdd } from '../../../assets/icons/i-add.svg';
@@ -10,18 +9,20 @@ import { ReactComponent as IRemove } from '../../../assets/icons/i-remove.svg';
 
 
 import { CProductShoppingCart } from './styles';
+import { useDispatch } from 'react-redux';
+import { addItem, dropItem, removeItem } from '../../../reducers/shoppingCartSlicer';
 
 
-function ProductShoppingCart(props: { product: IProduct }) {
+function ProductShoppingCart(props: { product: IShoppingCartItem }) {
 
-    const { title, price, image } = props.product
-
-    const [amount, setAmount] = React.useState(0)
+    const { title, price, image, amount } = props.product
     const [total, setTotal] = React.useState(0)
 
     React.useEffect(() => {
         setTotal(amount * price)
     }, [amount])
+
+    const dispatch = useDispatch()
 
     return <CProductShoppingCart>
         <div className="content">
@@ -34,7 +35,9 @@ function ProductShoppingCart(props: { product: IProduct }) {
                 <p>Valor Unitário</p>
                 <p className="content-price">${toDecimal(price)}</p>
             </div>
-            <span className="i-trash"><ITrash /></span>
+            <span className="i-trash"><ITrash onClick={() => {
+                dispatch(dropItem(props.product.id))
+            }} /></span>
         </div>
 
         <div className="footer">
@@ -42,8 +45,10 @@ function ProductShoppingCart(props: { product: IProduct }) {
 
             <div className="content-amount">
                 <button className="btn-less" onClick={() => {
-                    setAmount(amount - 1)
-                }}>
+                    dispatch(removeItem(props.product)) 
+                }}
+                    disabled={props.product.amount <= 1}
+                >
                     <span className="i-remove"><IRemove /></span>
                 </button>
 
@@ -52,7 +57,7 @@ function ProductShoppingCart(props: { product: IProduct }) {
                 </span>
 
                 <button className="btn-more" onClick={() => {
-                    setAmount(amount + 1)
+                    dispatch(addItem(props.product))
                 }}>
                     <span className="i-add"><IAdd /></span>
                 </button>

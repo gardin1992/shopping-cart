@@ -27,7 +27,9 @@ export const CProductShoppingCart = styled.article`
             fill: ${theme.colors.secondary};
             width: 20px;
             height: 20px;
-
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 
@@ -101,6 +103,12 @@ export const CProductShoppingCart = styled.article`
                 font-weight: bold;
                 color: ${theme.colors.secondary};
                 margin: 0 18px;
+            }
+
+            button:disabled {
+                svg {
+                    fill: ${theme.colors.primary};
+                }
             }
         }
     }

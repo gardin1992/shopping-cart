@@ -25,8 +25,11 @@ export interface IProductShoppingCart {
     productPrice: number,
 }
 
+export interface IShoppingCartItem extends IProduct {
+    amount: number,
+}
 export interface IShoppingCart {
-    items: IProduct[],
+    items: IShoppingCartItem[],
     totalAmount?: number,
 }
 

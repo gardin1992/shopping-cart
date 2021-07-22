@@ -1,17 +1,15 @@
 import * as React from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { addItem } from '../reducers/shoppingCartSlicer';
-
-
 
 import styled from 'styled-components'
 
 import Banner from "../components/banner";
 import ProductShowcase from "../components/product/product-showcase/ProductShowcase";
-import { IProduct, IShoppingCart } from "../interfaces";
+import { IProduct } from "../interfaces";
 
 
 const product: IProduct = {
@@ -51,22 +49,7 @@ function Home() {
         requestApi(setProductList)
     }, [])
 
-    React.useEffect(() => {
-
-        if (!!productList && productList?.length) {
-
-
-        }
-
-        console.log('productList', productList)
-    }, [productList])
-
-
-    // const shoppingCartState = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart)
-
     const results = productList.length ?? 0;
-
-    // const [shoppingCartItems, setShoppingCartItems] = React.useState<IProduct[]>([])
 
     const dispatch = useDispatch()
 
@@ -74,7 +57,6 @@ function Home() {
         dispatch(addItem(product))
         history.push('/carrinho')
     }
-
 
     return <div>
         <Banner />

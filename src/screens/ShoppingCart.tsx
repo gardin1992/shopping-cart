@@ -1,11 +1,10 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from 'styled-components';
 
 import ProductShoppingCart from "../components/product/product-shopping-cart";
-import { IProduct, IProductShoppingCart, IPurchase, IShoppingCart } from "../interfaces";
+import { IShoppingCart, IShoppingCartItem } from "../interfaces";
 import { toDecimal } from "../mask";
-import { addItem, removeItem } from "../reducers/shoppingCartSlicer";
 import { theme } from "../styles";
 
 const CShoppingCartContent = styled.div`
@@ -68,33 +67,38 @@ const CButton = styled.button`
 `
 
 function ShoppingCart() {
-    const [product, setProduct] = React.useState<IProduct>({
-        title: '',
-        category: '',
-        description: '',
-        id: 0,
-        price: 0,
-        image: '',
-    });
-
-    const items: IProductShoppingCart[] = []
-
-    const [purchase, setPurchase] = React.useState<IPurchase>({
-        items: [],
-        discount: 0,
-        paymentMethod: 'money',
-        subTotal: 0,
-        total: 0,
-        totalAmount: 0,
-    })
-
-
     const stateItems = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart.items)
 
-    const dispatch = useDispatch()
+    const [sale, setSale] = React.useState({
+        subTotal: 0,
+        total: 0,
+        amount: 0,
+        discount: 0,
+    })
 
     React.useEffect(() => {
-        console.log(stateItems)
+        if (stateItems.length) {
+
+            let reduced = stateItems.reduce((previosValue, currentValue) => {
+                const _value = currentValue.price * currentValue.amount
+                const _value1 = previosValue.price * previosValue.amount
+
+                return {
+                    ...currentValue,
+                    price: _value + _value1,
+                    amount: previosValue.amount + currentValue.amount
+                }
+            })
+            const perDiscountPrice = reduced.price * 12 / 100
+
+            setSale({
+                subTotal: reduced.price,
+                amount: reduced.amount,
+                total: reduced.price - perDiscountPrice,
+                discount: perDiscountPrice,
+            })
+
+        }
     }, stateItems)
 
     return <CShoppingCartContent className="fluid">
@@ -102,7 +106,7 @@ function ShoppingCart() {
             <h2>Meu Carrinho</h2>
 
             <div>
-                {stateItems.map((item: IProduct) => <ProductShoppingCart product={item} />)}
+                {stateItems.map((item: IShoppingCartItem) => <ProductShoppingCart product={item} />)}
             </div>
         </CShoppingCart>
 
@@ -112,20 +116,20 @@ function ShoppingCart() {
             <div>
                 <div className="content-purchase">
                     <CPurchaseRow>
-                        <h3>Sub-total ({purchase.totalAmount} itens)</h3>
-                        <h4>${toDecimal(purchase.subTotal ?? 0)}</h4>
+                        <h3>Sub-total ({sale.amount} itens)</h3>
+                        <h4>${toDecimal(sale.subTotal ?? 0)}</h4>
                     </CPurchaseRow>
 
                     <CPurchaseRow>
-                        <h3>Desconto</h3>
-                        <h4>${toDecimal(purchase.discount ?? 0)}</h4>
+                        <h3>Desconto (12% à vista)</h3>
+                        <h4>${toDecimal(sale.discount ?? 0)}</h4>
                     </CPurchaseRow>
 
                     <hr></hr>
 
                     <CPurchaseRow>
                         <h3>Total</h3>
-                        <h4>${toDecimal(purchase.total ?? 0)}</h4>
+                        <h4>${toDecimal(sale.total ?? 0)}</h4>
                     </CPurchaseRow>
                 </div>
 
