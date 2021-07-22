@@ -1,10 +1,12 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 
 import ProductShoppingCart from "../components/product/product-shopping-cart";
 import { IShoppingCart, IShoppingCartItem } from "../interfaces";
 import { toDecimal } from "../mask";
+import { resetState } from "../reducers/shoppingCartSlicer";
 import { theme } from "../styles";
 
 const CShoppingCartContent = styled.div`
@@ -66,8 +68,30 @@ const CButton = styled.button`
     }
 `
 
+const CButtonLabel = styled.label`
+    width: 100%;
+    height: 60px;
+    margin-top: 100px;
+    background: ${theme.colors.white};
+    border: 1px solid ${theme.colors.secondary};
+    color: ${theme.colors.secondary};
+
+    &:hover {
+        background: ${theme.colors.secondary};
+        border: 1px solid ${theme.colors.white};
+        color: ${theme.colors.white};
+    }
+
+
+    display: FLEX;
+    justify-content: center;
+    align-items: center;
+`
+
+
 function ShoppingCart() {
     const stateItems = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart.items)
+    const history = useHistory()
 
     const [sale, setSale] = React.useState({
         subTotal: 0,
@@ -101,6 +125,13 @@ function ShoppingCart() {
         }
     }, stateItems)
 
+    const dispatch = useDispatch()
+
+    const closeShoppingCart = () => {
+        dispatch(resetState())
+        history.replace('/')
+    }
+
     return <CShoppingCartContent className="fluid">
         <CShoppingCart>
             <h2>Meu Carrinho</h2>
@@ -133,9 +164,18 @@ function ShoppingCart() {
                     </CPurchaseRow>
                 </div>
 
-                <CButton>
+                <CButtonLabel htmlFor="modal-control">
                     Finalizar Pedido
-                </CButton>
+                </CButtonLabel>
+                <input type="checkbox" id="modal-control" className="modal" />
+
+                <div>
+                    <div className="card">
+                        <label htmlFor="modal-control" className="modal-close" onClick={closeShoppingCart} ></label>
+                        <h3 className="section">Obrigado!</h3>
+                        <p className="section">Compra realizada com sucesso!</p>
+                    </div>
+                </div>
             </div>
         </CShoppingCart>
     </CShoppingCartContent>

@@ -36,15 +36,16 @@ export const counterSlice = createSlice({
         },
         dropItem: (state, action) => {
             const items = state.items.filter((i: IProduct) => i.id !== action.payload)
-
-            console.log('items', state.items)
             state.items = items
-            console.log('items', state.items)
+        },
+        resetState: (state) => {
+            state.items = []
+            state.totalAmount = 0
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { addItem, removeItem, dropItem } = counterSlice.actions
+export const { addItem, removeItem, dropItem, resetState } = counterSlice.actions
 
 export default counterSlice.reducer
