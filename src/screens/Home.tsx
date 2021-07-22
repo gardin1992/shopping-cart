@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import Banner from "../components/banner";
 import ProductShowcase from "../components/product/product-showcase/ProductShowcase";
 import { IProduct } from "../interfaces";
-
+import IndexedDbStore from '../helpers/indexedDBStore'
 
 const product: IProduct = {
     category: 'cadeira gamer',
@@ -30,6 +30,7 @@ flex-wrap: wrap;
 
 function Home() {
 
+    const indexDbStore = IndexedDbStore()
     const [productList, setProductList] = React.useState<IProduct[]>([])
 
     const history = useHistory();
@@ -48,6 +49,19 @@ function Home() {
     React.useEffect(() => {
         requestApi(setProductList)
     }, [])
+
+    React.useEffect(() => {
+
+
+        if (!!indexDbStore.connection) {
+            console.log('asas', indexDbStore)
+            indexDbStore.insertData("clientes", { ssn: "666-66-6666", nome: "John", idade: 29 }, (e: any) => { }, (e: any) => {
+
+                console.log('e', e.target.error)
+            })
+        }
+
+    }, [indexDbStore.connection])
 
     const results = productList.length ?? 0;
 

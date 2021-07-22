@@ -39,6 +39,7 @@ GET - /usuario - Página para cadastro de um novo usuário/realizar login pelo u
 ### A Fazer
 - adicionar as açoes da página do carrinho de compras
 - Página de Logar/Cadastrar Usuário
+- buscar endereço por cep no cadastro de usuario (via cep)
 - manter os dados no carrinho de compras ao atualizar a página ou abrir a página novamente
 - na pagina inicial adicionar uma animação ao comrar um produto e nao redirecionar para o carrinho, sómente se quiser
 - adicionar os métodos de ordenação dos produtos na pagina inicial

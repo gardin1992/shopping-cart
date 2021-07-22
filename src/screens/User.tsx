@@ -1,12 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import {ReactComponent as IEmail} from '../assets/icons/i-email.svg'
-import {ReactComponent as IPassword} from '../assets/icons/i-password.svg'
-import {ReactComponent as IContact} from '../assets/icons/i-contact.svg'
+import { ReactComponent as IEmail } from '../assets/icons/i-email.svg'
+import { ReactComponent as IPassword } from '../assets/icons/i-password.svg'
+import { ReactComponent as IContact } from '../assets/icons/i-contact.svg'
 
 import { theme } from '../styles'
 import Button from '../components/button'
+import ViaCepApi, { IViaCepResponseDTO } from '../helpers/viaCepApi'
 
 const CButton = styled(Button)`
     width: 393px;
@@ -39,7 +40,7 @@ const CInputGroup = styled.div`
         outline: none;
         border: none;
         font-size: 16px;
-        color: ${theme.colors.secondary};
+        color: ${theme.colors.black};
     }
 
     .input-group {
@@ -71,7 +72,55 @@ const CUserContainer = styled.div`
     }
 `
 
+export interface IUserLogin {
+    email: string,
+    password: string,
+}
+
+export interface IUserRegister {
+    name: string,
+    email: string,
+    password: string,
+    repassword: string,
+    //
+    postalCode: string,
+    streetName: string,
+    streetNumber: string,
+    neighborhood: string,
+    state: string,
+    city: string,
+}
+
+const initialUserRegister: IUserRegister = {
+    name: "",
+    email: "",
+    password: "",
+    repassword: "",
+    //
+    postalCode: "",
+    streetName: "",
+    streetNumber: "",
+    neighborhood: "",
+    state: "",
+    city: "",
+}
+
 function User() {
+    const [userLogin, setUserLogin] = React.useState<IUserLogin | null>(null)
+    const [userRegister, setUserRegister] = React.useState<IUserRegister>(initialUserRegister)
+
+    const useViaCepApi = ViaCepApi()
+
+    React.useEffect(() => {
+
+        useViaCepApi.getByPostalCode('19750000')
+            .then(resp => {
+                console.log(resp)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
 
     return <CUserContainer className='fluid'>
 
@@ -98,7 +147,7 @@ function User() {
                 </div>
             </CInputGroup>
 
-            <CButton onClick={() => {}} className="btn-login">
+            <CButton onClick={() => { }} className="btn-login">
                 Acessar Conta
             </CButton>
         </div>
@@ -112,7 +161,9 @@ function User() {
                 </span>
                 <div className="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="Email" name="email" />
+                    <input type="email" placeholder="Email" name="email" value={userRegister.email} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, email: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -120,7 +171,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Nome</label>
-                    <input type="password" placeholder="Nome" name="name" />
+                    <input type="password" placeholder="Nome" name="name" value={userRegister.name} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, name: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -130,7 +183,9 @@ function User() {
                 </span>
                 <div className="input-group">
                     <label>Senha</label>
-                    <input type="password" placeholder="Senha" name="password" />
+                    <input type="password" placeholder="Senha" name="password" value={userRegister.password} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, password: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -138,7 +193,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Confirmar Senha</label>
-                    <input type="password" placeholder="Confirmar senha" name="repassword" />
+                    <input type="password" placeholder="Confirmar senha" name="repassword" value={userRegister.repassword} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, repassword: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -150,7 +207,23 @@ function User() {
                 </span>
                 <div className="input-group">
                     <label>CEP</label>
-                    <input type="text" placeholder="CEP" name="postalCode" />
+                    <input type="text" placeholder="CEP" name="postalCode" value={userRegister.postalCode} onBlur={(e) => {
+                        useViaCepApi.getByPostalCode(userRegister.postalCode)
+                            .then(resp => {
+                                if (!!resp) {
+                                    const data: IViaCepResponseDTO = resp
+                                    setUserRegister(prev => ({ ...prev, ...data}))
+                                }
+
+
+                                console.log(resp)
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, postalCode: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -158,7 +231,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Logradouro</label>
-                    <input type="text" placeholder="Logradouro" name="streetName" />
+                    <input type="text" placeholder="Logradouro" name="streetName" value={userRegister.streetName} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, streetName: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -166,7 +241,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Número</label>
-                    <input type="text" placeholder="Número" name="streetNumber" />
+                    <input type="text" placeholder="Número" name="streetNumber" value={userRegister.streetNumber} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, streetNumber: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -174,7 +251,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Bairro</label>
-                    <input type="text" placeholder="Bairro" name="neighborhood" />
+                    <input type="text" placeholder="Bairro" name="neighborhood" value={userRegister.neighborhood} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, neighborhood: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -182,7 +261,9 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Cidade</label>
-                    <input type="text" placeholder="Cidade" name="city" />
+                    <input type="text" placeholder="Cidade" name="city" value={userRegister.city} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, city: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
@@ -190,11 +271,13 @@ function User() {
                 <span />
                 <div className="input-group">
                     <label>Estado</label>
-                    <input type="text" placeholder="Estado" name="uf" />
+                    <input type="text" placeholder="Estado" name="state" value={userRegister.state} onChange={(e) => {
+                        setUserRegister(prev => ({ ...prev, state: e.target.value }))
+                    }} />
                 </div>
             </CInputGroup>
 
-            <CButton onClick={() => {}} className="btn-login">
+            <CButton onClick={() => { }} className="btn-login">
                 Prosseguir
             </CButton>
         </div>
