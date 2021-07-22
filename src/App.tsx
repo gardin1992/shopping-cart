@@ -12,6 +12,8 @@ import Header from './components/header';
 import Home from './screens/Home';
 import ShoppingCart from './screens/ShoppingCart';
 import User from './screens/users/User';
+import PrivateRoute from './components/route/PrivateRoute';
+import ConfirmScreen from './screens/checkout/Confirm';
 
 
 function App() {
@@ -22,9 +24,9 @@ function App() {
           <Header />
           <Switch>
             <Route exact={true} path={`/`} component={Home} />
-            <Route exact={true} path={'/carrinho'} component={ShoppingCart} />
             <Route exact={true} path={'/usuario'} component={User} />
-
+            <Route exact={true} path={'/carrinho'} component={ShoppingCart} />
+            <PrivateRoute exact={true} path={`/checkout/confirmar`} Component={ConfirmScreen} />
           </Switch>
         </div>
       </Router>

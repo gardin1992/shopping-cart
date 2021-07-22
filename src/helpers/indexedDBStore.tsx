@@ -1,48 +1,40 @@
 import * as React from 'react'
 
-function IndexedDbStore() {
+export const dbConfig = {
+    DB_NAME: "shoppingCart",
+    DB_VERSION: 1,
+}
 
+export const userSchema = {
+    name: "users",
+    uniques: ["email"]
+}
+
+export const purchaseSchema = {
+    name: "purchases",
+}
+
+
+function IndexedDbStore() {
     const [connection, setConnection] = React.useState<IDBDatabase | null>(null)
     const IndxDB: IDBFactory = window.indexedDB
 
     React.useEffect(() => {
-        const openRequest = IndxDB.open('shoppingCart', 1);
-
-        // Isso é o que os dados de nossos clientes será.
-        const DadosClientes = [
-            { ssn: "444-44-4444", nome: "Bill", idade: 35, email: "bill@company.com" },
-            { ssn: "555-55-5555", nome: "Donna", idade: 32, email: "donna@home.org" }
-        ];
+        const openRequest = IndxDB.open(dbConfig.DB_NAME, dbConfig.DB_VERSION);
 
         openRequest.onupgradeneeded = (e: any) => {
+            // console.log('Criando ou atualizando o banco');
 
-            console.log('Criando ou atualizando o banco');
             var minhaConnection = e.target.result;
             minhaConnection.createObjectStore('negociacoes');
 
-            var db = e.target.result;
+            const _connection = e.target.result;
 
-            // Cria um objectStore para conter a informação sobre nossos clientes. Nós vamos
-            // usar "ssn" como key path porque sabemos que é único;
-            var objectStore = db.createObjectStore("clientes", { keyPath: "id", autoIncrement: true });
+            const userObjStore = _connection.createObjectStore(userSchema.name, { keyPath: "id", autoIncrement: true });
+            userObjStore.createIndex("name", "name", { unique: false });
+            userObjStore.createIndex("email", "email", { unique: true });
 
-            // Cria um índice para buscar clientes pelo nome. Podemos ter nomes
-            // duplicados, então não podemos usar como índice único.
-            objectStore.createIndex("nome", "nome", { unique: false });
-
-            // Cria um índice para buscar clientes por email. Queremos ter certeza
-            // que não teremos 2 clientes com o mesmo e-mail;
-            objectStore.createIndex("email", "email", { unique: true });
-
-            // Usando transação oncomplete para afirmar que a criação do objectStore
-            // é terminada antes de adicionar algum dado nele.
-            objectStore.transaction.oncomplete = function (event: any) {
-                // Armazenando valores no novo objectStore.
-                var clientesObjectStore = db.transaction("clientes", "readwrite").objectStore("clientes");
-                for (var i in DadosClientes) {
-                    clientesObjectStore.add(DadosClientes[i]);
-                }
-            }
+            _connection.createObjectStore(purchaseSchema.name, { keyPath: "id", autoIncrement: true });
         };
 
         openRequest.onsuccess = (e: any) => {
@@ -50,42 +42,21 @@ function IndexedDbStore() {
             // e.target.result é uma instância de IDBDatabase
             setConnection(e.target.result)
 
-            var db = e.target.result;
-            var transaction = db.transaction(["clientes"], "readwrite");
+            // var request = db.transaction(["clientes"], "readwrite")
+            //     .objectStore("clientes")
+            //     .delete(1);
 
-            // Faz algo após a inserção dos dados.
-            transaction.oncomplete = function (event: any) {
-                alert("Pronto!");
-            };
+            // request.onsuccess = function (event: any) {
+            //     // Pronto!
+            // };
 
-            transaction.onerror = function (event: any) {
-                // Não esquecer de tratar os erros!
-            };
-
-            var objectStore = transaction.objectStore("clientes");
-            for (var i in DadosClientes) {
-                var request = objectStore.add(DadosClientes[i]);
-                request.onsuccess = function (event: any) {
-                    // event.target.result == DadosClientes[i].ssn;
-                };
-            }
-
-            var request = db.transaction(["clientes"], "readwrite")
-                .objectStore("clientes")
-                .delete(1);
-
-            request.onsuccess = function (event: any) {
-                // Pronto!
-            };
-
-            request.onerror = function (event: any) {
-                console.log('error', event.target.error)
-            }
+            // request.onerror = function (event: any) {
+            //     console.log('error', event.target.error)
+            // }
         };
 
         openRequest.onerror = (e: any) => {
             console.log(e.target.error);
-
             setConnection(null)
         };
     }, [])

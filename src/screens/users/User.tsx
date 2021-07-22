@@ -1,4 +1,6 @@
 import * as React from 'react'
+import styled from 'styled-components'
+import classNames from 'classnames'
 
 import { ReactComponent as IEmail } from '../../assets/icons/i-email.svg'
 import { ReactComponent as IPassword } from '../../assets/icons/i-password.svg'
@@ -10,6 +12,8 @@ import * as S from './styles'
 import { requiredField } from '../../helpers/strings'
 import { IUserLogin, IUserRegister } from '../../interfaces/users'
 import Input from '../../components/input'
+import IndexedDbStore, { userSchema } from '../../helpers/indexedDBStore'
+import { useHistory } from 'react-router'
 
 const initialUserRegister: IUserRegister = {
     name: "",
@@ -30,6 +34,43 @@ const initialUserLogin = {
     password: ""
 }
 
+const InputBefore = styled.input`
+ &::before {
+    content: " ";
+    font-family: sans-serif;
+    font-size: calc(1rem + var(--universal-padding) / 2);
+    top: calc(0rem - var(--universal-padding));
+    left: calc(var(--universal-padding) / 4);
+ }
+`
+
+const CModal = styled.div`
+    &.content-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        background: #80808047;
+        display: none;
+    }
+
+    &.show {
+        display: flex !important;
+    }
+
+    .modal-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 0;
+        padding: 5px;
+        background: #fff;
+    }
+`
+
 function User() {
 
     const [userLogin, setUserLogin] = React.useState<IUserLogin>(initialUserLogin)
@@ -38,6 +79,8 @@ function User() {
     const [userLoginError, setUserLoginError] = React.useState<IUserLogin>({})
 
     const useViaCepApi = ViaCepApi()
+    const indexDbStore = IndexedDbStore()
+    const history = useHistory()
 
     const [hasFetching, setHasFetching] = React.useState(false)
 
@@ -60,41 +103,42 @@ function User() {
     }
 
     const sendUserRegister = () => {
+        const errors: any = {}
 
         if (!userRegister.name) {
-            setUserRegisterErrors(prev => ({ ...prev, name: requiredField }))
-        } else {
-            // setUserRegisterErrors(prev => ({ ...prev, name: "" }))
+            errors.name = requiredField
         }
 
         if (!userRegister.email) {
-            setUserRegisterErrors(prev => ({ ...prev, email: requiredField }))
-        } else {
-            // setUserRegisterErrors(prev => ({ ...prev, email: "" }))
+            errors.email = requiredField
         }
 
         if (!userRegister.password || !userRegister.repassword) {
-            setUserRegisterErrors(prev => ({ ...prev, password: "Senhas não são iguais" }))
+            errors.password = errors.repassword = requiredField
         } else if (userRegister.password !== userRegister.repassword) {
-            // setUserRegisterErrors(prev => ({ ...prev, password: "" }))
+            errors.repassword = "Senhas não são iguais"
         }
 
         if (!userRegister.postalCode) {
-            setUserRegisterErrors(prev => ({ ...prev, postalCode: requiredField }))
-        } else {
-            // setUserRegisterErrors(prev => ({ ...prev, postalCode: "" }))
+            errors.postalCode = requiredField
         }
 
         if (!userRegister.streetName) {
-            setUserRegisterErrors(prev => ({ ...prev, streetName: requiredField }))
+            errors.streetName = requiredField
         }
 
         if (!userRegister.streetNumber) {
-            setUserRegisterErrors(prev => ({ ...prev, streetNumber: requiredField }))
+            errors.streetNumber = requiredField
         }
 
         if (!userRegister.city) {
-            setUserRegisterErrors(prev => ({ ...prev, city: requiredField }))
+            errors.city = requiredField
+        }
+
+        setUserRegisterErrors(errors)
+
+        if (!Object.keys(errors).length) {
+            handleRegisterUser()
         }
     }
 
@@ -107,6 +151,32 @@ function User() {
             setUserLoginError(prev => ({ ...prev, password: requiredField }))
         }
     }
+
+    const handleRegisterUser = () => {
+        const onSuccess = (e: any) => {
+            setShowModal(true)
+        }
+
+        const onError = (e: any) => {
+            console.log('erro ao adicionar usuário', e.target.error);
+        }
+
+        if (!!indexDbStore.connection)
+            indexDbStore.insertData(userSchema.name, userRegister, onSuccess, onError)
+    }
+
+
+    React.useEffect(() => {
+        if (!!indexDbStore.connection) {
+            indexDbStore.insertData(userSchema.name, { ssn: "666-66-6666", nome: "John", idade: 29, email: "gardin1992@gmail.com" }, (e: any) => { }, (e: any) => {
+                console.log('e', e.target.error)
+            })
+        }
+    }, [indexDbStore.connection])
+
+
+    const [showModal, setShowModal] = React.useState(false)
+
 
     return <S.CUserContainer className='fluid'>
 
@@ -269,6 +339,17 @@ function User() {
             <S.CButton onClick={sendUserRegister} className="btn-login">
                 Prosseguir
             </S.CButton>
+
+            <CModal className={classNames(['content-modal'], { show: showModal })}>
+                <div className="card">
+                    <button className="modal-close" onClick={() => {
+                        setShowModal(false)
+                        history.push('/')
+                    }}>x</button>
+                    <h3 className="section">Obrigado!</h3>
+                    <p className="section">Cadastro Efetuado com sucesso, você será redirecionado para a página inicial!</p>
+                </div>
+            </CModal>
         </div>
 
     </S.CUserContainer>
