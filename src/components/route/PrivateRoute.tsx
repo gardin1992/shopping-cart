@@ -1,20 +1,14 @@
 import * as React from 'react';
-import { Route, Redirect, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Route, Redirect } from 'react-router-dom';
+import { isAuthorize } from '../../reducers/authenticationSlicer';
 
 const PrivateRoute = ({ Component, exact, path }: { Component: any, exact: boolean, path: string }) => {
-
-    console.log()
-
-    const history = useHistory()
-
-    const isLogin = () => {
-        return false;
-    }
 
     return (
 
         <Route exact={exact} path={path} render={props => (
-            isLogin() ?
+            isAuthorize() ?
                 <Component />
                 : <Redirect to="/usuario" />
         )} />

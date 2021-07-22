@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 
 import store from './store'
 
@@ -14,18 +14,19 @@ import ShoppingCart from './screens/ShoppingCart';
 import User from './screens/users/User';
 import PrivateRoute from './components/route/PrivateRoute';
 import ConfirmScreen from './screens/checkout/Confirm';
-
+import PublicRoute from './components/route/PublicRoute';
 
 function App() {
+
   return (
     <Provider store={store}>
       <Router>
         <div>
           <Header />
           <Switch>
-            <Route exact={true} path={`/`} component={Home} />
-            <Route exact={true} path={'/usuario'} component={User} />
-            <Route exact={true} path={'/carrinho'} component={ShoppingCart} />
+            <PublicRoute exact={true} path={`/`} Component={Home} />
+            <PublicRoute exact={true} path={'/usuario'} Component={User} />
+            <PublicRoute exact={true} path={'/carrinho'} Component={ShoppingCart} />
             <PrivateRoute exact={true} path={`/checkout/confirmar`} Component={ConfirmScreen} />
           </Switch>
         </div>

@@ -62,16 +62,57 @@ function IndexedDbStore() {
     }, [])
 
     const insertData = (
-        dbName: string,
+        storeName: string,
         item: any,
         onSuccess?: (e: any) => void,
         onError?: (e: any) => void,
     ) => {
         if (!!connection) {
-            const transaction = connection.transaction([dbName], "readwrite");
-            const objectStore = transaction.objectStore(dbName);
+            const transaction = connection.transaction([storeName], "readwrite");
+            const objectStore = transaction.objectStore(storeName);
 
             const request = objectStore.add(item);
+
+            if (!!onSuccess)
+                request.onsuccess = onSuccess;
+
+            if (!!onError)
+                request.onerror = onError;
+        }
+    }
+
+    const getDataById = (
+        storeName: string,
+        id: number,
+        onSuccess?: (e: any) => void,
+        onError?: (e: any) => void,
+    ) => {
+        if (!!connection) {
+            const transaction = connection.transaction([storeName], "readwrite");
+            const objectStore = transaction.objectStore(storeName);
+
+            const request = objectStore.get(id);
+
+            if (!!onSuccess)
+                request.onsuccess = onSuccess;
+
+            if (!!onError)
+                request.onerror = onError;
+        }
+    }
+
+    const getDataByIndex = (
+        storeName: string,
+        index: string,
+        value: any,
+        onSuccess?: (e: any) => void,
+        onError?: (e: any) => void,
+    ) => {
+        if (!!connection) {
+            const transaction = connection.transaction([storeName], "readwrite");
+            const objectStore = transaction.objectStore(storeName);
+            const myIndex = objectStore.index(index);
+            const request = myIndex.get(value);
 
             if (!!onSuccess)
                 request.onsuccess = onSuccess;
@@ -84,6 +125,8 @@ function IndexedDbStore() {
     return {
         connection,
         insertData,
+        getDataById,
+        getDataByIndex,
     }
 }
 

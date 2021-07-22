@@ -1,10 +1,15 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from 'styled-components'
+import cx from 'classnames'
+import { useDispatch, useSelector } from "react-redux";
 
 import { theme } from '../../styles'
 import { ReactComponent as IUser } from '../../assets/i-user.svg';
 import { ReactComponent as IShoppingCart } from '../../assets/i-shopping-cart.svg';
+import { ReactComponent as ILogout } from '../../assets/icons/i-logout.svg';
+import { unauthorize } from "../../reducers/authenticationSlicer";
+
 
 const CIcon = styled.a`
     svg {
@@ -12,11 +17,17 @@ const CIcon = styled.a`
         width: 50px;
         height: 50px;
     }
+
+    &.user {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between
+    }
 `
 
-function Icon(props: { icon: React.ReactElement, onClick: () => void }) {
-    return <CIcon href="#" className="button" onClick={props.onClick}>
-        {props.icon}
+function Icon(props: { icon: React.ReactElement, onClick: () => void, children?: string | '', className?: string }) {
+    return <CIcon href="#" className={cx(["button", props.className])} onClick={props.onClick}>
+        {props.icon} {props.children}
     </CIcon>
 }
 
@@ -38,6 +49,10 @@ header {
 `
 
 function Header() {
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const auth = useSelector((state: { authentication: any }) => state.authentication)
+
     return <CHeader className="flex-center">
         <header className="flex-center">
             <Link to="/" className='link'>
@@ -50,8 +65,17 @@ function Header() {
                 </Link>
 
                 <Link to="/usuario" className='link'>
-                    <Icon onClick={() => { }} icon={<IUser />} />
+                    <Icon className="user" onClick={() => { }} icon={<IUser />}>
+                        {!!auth?.isAuth ? auth.user?.name : 'Entrar'}
+                    </Icon>
                 </Link>
+
+                {!!auth?.isAuth &&
+                    <Icon onClick={() => {
+                        dispatch(unauthorize())
+                        history.push('/')
+                    }} icon={<ILogout />} />
+                }
             </div>
         </header>
     </CHeader>

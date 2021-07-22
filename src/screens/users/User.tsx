@@ -15,6 +15,9 @@ import Input from '../../components/input'
 import IndexedDbStore, { userSchema } from '../../helpers/indexedDBStore'
 import { useHistory } from 'react-router'
 
+import { useDispatch, useSelector } from 'react-redux'
+import { authorize } from '../../reducers/authenticationSlicer'
+
 const initialUserRegister: IUserRegister = {
     name: "",
     email: "",
@@ -33,16 +36,6 @@ const initialUserLogin = {
     email: "",
     password: ""
 }
-
-const InputBefore = styled.input`
- &::before {
-    content: " ";
-    font-family: sans-serif;
-    font-size: calc(1rem + var(--universal-padding) / 2);
-    top: calc(0rem - var(--universal-padding));
-    left: calc(var(--universal-padding) / 4);
- }
-`
 
 const CModal = styled.div`
     &.content-modal {
@@ -81,6 +74,9 @@ function User() {
     const useViaCepApi = ViaCepApi()
     const indexDbStore = IndexedDbStore()
     const history = useHistory()
+
+    const auth = useSelector((state: { authentication: any }) => state.authentication)
+    const dispatch = useDispatch()
 
     const [hasFetching, setHasFetching] = React.useState(false)
 
@@ -143,13 +139,41 @@ function User() {
     }
 
     const sentUserLogin = () => {
+        const errors: any = {}
+
         if (!userLogin.email) {
-            setUserLoginError(prev => ({ ...prev, email: requiredField }))
+            errors.email = requiredField
         }
 
         if (!userLogin.password) {
-            setUserLoginError(prev => ({ ...prev, password: requiredField }))
+            errors.password = requiredField
         }
+
+        setUserLoginError(errors)
+
+        if (!Object.keys(errors).length)
+            handleUserLogin()
+    }
+
+    const handleUserLogin = () => {
+        const onSuccess = (e: any) => {
+            const user = e.target.result
+            console.log(e.target.result)
+
+            if (!user) {
+                alert('Usuário ou senha incorreto')
+            } else {
+                dispatch(authorize(user))
+                history.push('/carrinho')
+            }
+        }
+
+        const onError = (e: any) => {
+            console.log('erro logar usuário', e.target.error);
+        }
+
+        if (!!indexDbStore.connection)
+            indexDbStore.getDataByIndex('users', 'email', userLogin.email, onSuccess, onError)
     }
 
     const handleRegisterUser = () => {
@@ -165,18 +189,7 @@ function User() {
             indexDbStore.insertData(userSchema.name, userRegister, onSuccess, onError)
     }
 
-
-    React.useEffect(() => {
-        if (!!indexDbStore.connection) {
-            indexDbStore.insertData(userSchema.name, { ssn: "666-66-6666", nome: "John", idade: 29, email: "gardin1992@gmail.com" }, (e: any) => { }, (e: any) => {
-                console.log('e', e.target.error)
-            })
-        }
-    }, [indexDbStore.connection])
-
-
     const [showModal, setShowModal] = React.useState(false)
-
 
     return <S.CUserContainer className='fluid'>
 
