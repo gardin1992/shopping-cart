@@ -11,7 +11,7 @@ import store from './store'
 import Header from './components/header';
 import Home from './screens/Home';
 import ShoppingCart from './screens/ShoppingCart';
-import User from './screens/User';
+import User from './screens/users/User';
 
 
 function App() {
