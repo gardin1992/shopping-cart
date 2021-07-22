@@ -29,9 +29,10 @@ yarn start # inicia o servidor WEB
 ## Rotas da aplicação
 
 GET - / - Página Inicial - Catalogo
+
 GET - /carrinho - Página com o carrinho de compras
-GET - /usuario/cadastrar - Página para cadastro de um novo usuário
-GET - /usuario/autenticar - página para realizar login pelo usuário
+
+GET - /usuario - Página para cadastro de um novo usuário/realizar login pelo usuário
 
 ## RoadMap
 

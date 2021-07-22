@@ -4,13 +4,15 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
+import { Provider } from 'react-redux'
+
+import store from './store'
 
 import Header from './components/header';
 import Home from './screens/Home';
 import ShoppingCart from './screens/ShoppingCart';
+import User from './screens/User';
 
-import store from './store'
-import { Provider } from 'react-redux'
 
 function App() {
   return (
@@ -19,12 +21,10 @@ function App() {
         <div>
           <Header />
           <Switch>
-            <Route exact={true} path={`/`}>
-              <Home />
-            </Route>
-            <Route path={'/carrinho'}>
-              <ShoppingCart />
-            </Route>
+            <Route exact={true} path={`/`} component={Home} />
+            <Route exact={true} path={'/carrinho'} component={ShoppingCart} />
+            <Route exact={true} path={'/usuario'} component={User} />
+
           </Switch>
         </div>
       </Router>

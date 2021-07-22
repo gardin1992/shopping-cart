@@ -49,7 +49,7 @@ function Header() {
                     <Icon onClick={() => { }} icon={<IShoppingCart />} />
                 </Link>
 
-                <Link to="/registrar" className='link'>
+                <Link to="/usuario" className='link'>
                     <Icon onClick={() => { }} icon={<IUser />} />
                 </Link>
             </div>

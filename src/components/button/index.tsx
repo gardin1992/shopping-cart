@@ -4,8 +4,7 @@ import { theme } from '../../styles';
 
 
 const CButton = styled.button`
-    height: 50px;
-
+    height: 60px;
     background-color: ${theme.colors.white};
     border: 1px solid ${theme.colors.primary};
     color: ${theme.colors.primary};
@@ -20,11 +19,11 @@ const CButton = styled.button`
 function Button({
     className = 'Button',
     onClick,
-    children,
+    children
 }: {
     className: string,
     onClick: () => void,
-    children: React.ReactElement
+    children: React.ReactElement | string
 }) {
     return <CButton
         className={className}
