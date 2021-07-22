@@ -20,7 +20,7 @@ function ProductShoppingCart(props: { product: IShoppingCartItem }) {
 
     React.useEffect(() => {
         setTotal(amount * price)
-    }, [amount])
+    }, [amount, price])
 
     const dispatch = useDispatch()
 

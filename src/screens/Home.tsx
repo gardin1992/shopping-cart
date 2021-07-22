@@ -56,7 +56,7 @@ function Home() {
                 console.log('e', e.target.error)
             })
         }
-    }, [indexDbStore.connection])
+    }, [indexDbStore, indexDbStore.connection])
 
     const results = productList.length ?? 0;
 

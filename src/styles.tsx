@@ -1,7 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
 
-import { DefaultTheme } from 'styled-components';
-
 export const theme = {
   colors: {
     primary: '#7F7F7F',

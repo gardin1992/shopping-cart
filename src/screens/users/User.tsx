@@ -1,5 +1,4 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import classNames from 'classnames'
 
 import { ReactComponent as IEmail } from '../../assets/icons/i-email.svg'
@@ -15,8 +14,9 @@ import Input from '../../components/input'
 import IndexedDbStore, { userSchema } from '../../helpers/indexedDBStore'
 import { useHistory } from 'react-router'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { authorize } from '../../reducers/authenticationSlicer'
+import { CModal } from '../../components/modal'
 
 const initialUserRegister: IUserRegister = {
     name: "",
@@ -37,33 +37,6 @@ const initialUserLogin = {
     password: ""
 }
 
-const CModal = styled.div`
-    &.content-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        background: #80808047;
-        display: none;
-    }
-
-    &.show {
-        display: flex !important;
-    }
-
-    .modal-close {
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin: 0;
-        padding: 5px;
-        background: #fff;
-    }
-`
-
 function User() {
 
     const [userLogin, setUserLogin] = React.useState<IUserLogin>(initialUserLogin)
@@ -75,13 +48,9 @@ function User() {
     const indexDbStore = IndexedDbStore()
     const history = useHistory()
 
-    const auth = useSelector((state: { authentication: any }) => state.authentication)
     const dispatch = useDispatch()
 
-    const [hasFetching, setHasFetching] = React.useState(false)
-
     const requestAddress = (postalCode: string) => {
-        setHasFetching(true)
 
         useViaCepApi.getByPostalCode(postalCode)
             .then(resp => {
@@ -92,9 +61,6 @@ function User() {
             })
             .catch(err => {
                 console.log(err)
-            })
-            .finally(() => {
-                setHasFetching(false)
             })
     }
 

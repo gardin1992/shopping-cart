@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 export interface IViaCepResponse {
     logradouro: string,
     bairro: string,

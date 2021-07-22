@@ -56,7 +56,7 @@ function Header() {
     return <CHeader className="flex-center">
         <header className="flex-center">
             <Link to="/" className='link'>
-                <a href="#" className="logo">Shopping Cart</a>
+                <a href="/" className="logo">Shopping Cart</a>
             </Link>
 
             <div>

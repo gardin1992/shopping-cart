@@ -59,7 +59,7 @@ function IndexedDbStore() {
             console.log(e.target.error);
             setConnection(null)
         };
-    }, [])
+    }, [IndxDB])
 
     const insertData = (
         storeName: string,

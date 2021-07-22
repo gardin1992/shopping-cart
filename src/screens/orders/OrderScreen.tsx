@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Input from '../../components/input'
 import IndexedDbStore from '../../helpers/indexedDBStore'
@@ -32,7 +33,7 @@ function OrderScreen() {
         city: "",
     })
 
-    const requestOrders = () => {
+    const requestOrders = React.useCallback(() => {
         const onSuccess = (e: any) => {
             const result = e.target.result
             setItems(result)
@@ -41,23 +42,22 @@ function OrderScreen() {
             console.log('erro ao buscar pedidos')
         }
 
-        indexedStore.getAll('purchases', onSuccess, onError)
-    }
+        if (!!indexedStore.connection) {
+            indexedStore.getAll('purchases', onSuccess, onError)
+        }
+    }, [indexedStore])
 
     React.useEffect(() => {
-        if (!!indexedStore.connection) {
-            requestOrders()
-        }
-
-    }, [indexedStore.connection])
+        requestOrders()
+    }, [requestOrders, indexedStore.connection])
 
     const handleFilter = () => {
         if (!!filter.name || !!filter.cpf || !!filter.city) {
 
             let filtered = items
 
-            
-            
+
+
             if (!!filter.name && filter.name !== "") {
                 const name = filter.name.toLocaleLowerCase()
                 filtered = filtered.filter((i: any) => i?.user?.name.toLocaleLowerCase().includes(name))
@@ -139,7 +139,9 @@ function OrderScreen() {
                     <td data-label="Cliente">{item.user?.name}</td>
                     <td data-label="Cidade">{item.user?.city}</td>
                     <td data-label="">
-                        <a href="#">Detalhes</a>
+                        <Link to={`/pedido/${item?.id}`}>
+                            <a href={`/pedido/${item?.id}`}>Detalhes</a>
+                        </Link>
                     </td>
                 </tr>)}
             </tbody>

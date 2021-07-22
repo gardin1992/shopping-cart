@@ -84,8 +84,8 @@ function ShoppingCart() {
     })
 
     React.useEffect(() => {
-        if (stateItems.length) {
 
+        if (!!stateItems.length) {
             let reduced = stateItems.reduce((previosValue, currentValue) => {
                 const _value = currentValue.price * currentValue.amount
                 const _value1 = previosValue.price * previosValue.amount
@@ -104,9 +104,8 @@ function ShoppingCart() {
                 total: reduced.price - perDiscountPrice,
                 discount: perDiscountPrice,
             })
-
         }
-    }, stateItems)
+    }, [stateItems, stateItems.length])
 
     const dispatch = useDispatch()
 

@@ -5,7 +5,7 @@ import { ReactComponent as IMoney } from '../../../assets/icons/i-money.svg';
 import { ReactComponent as ICreditCard } from '../../../assets/icons/i-credit-card.svg';
 
 import * as S from './styles'
-import { IProduct, IProductShowCase } from '../../../interfaces';
+import { IProductShowCase } from '../../../interfaces';
 
 function ProductShowcase(props: IProductShowCase) {
     const perDiscountPrice = props.price * 12 / 100
