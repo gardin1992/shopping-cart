@@ -15,6 +15,7 @@ import PrivateRoute from './components/route/PrivateRoute';
 import PublicRoute from './components/route/PublicRoute';
 import OrderScreen from './screens/orders/OrderScreen';
 import ConfirmScreen from './screens/orders/ConfirmScreen';
+import OrderDetailsScreen from './screens/orders/OrderDetailsScreen';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
             <PublicRoute exact={true} path={'/pedidos'} Component={OrderScreen} />
             <PublicRoute exact={true} path={'/carrinho'} Component={ShoppingCart} />
             <PrivateRoute exact={true} path={`/pedidos/confirmar`} Component={ConfirmScreen} />
+            <PublicRoute exact={false} path={`/pedidos/:id`} Component={OrderDetailsScreen} />
 
           </Switch>
         </div>

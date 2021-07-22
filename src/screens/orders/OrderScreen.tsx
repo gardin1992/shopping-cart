@@ -131,8 +131,8 @@ function OrderScreen() {
                     <td data-label="Cliente">{item.user?.name}</td>
                     <td data-label="Cidade">{item.user?.city}</td>
                     <td data-label="">
-                        <Link to={`/pedido/${item?.id}`}>
-                            <a href={`/pedido/${item?.id}`}>Detalhes</a>
+                        <Link to={`/pedidos/${item?.id}`}>
+                            <a href={`/pedidos/${item?.id}`}>Detalhes</a>
                         </Link>
                     </td>
                 </tr>)}
