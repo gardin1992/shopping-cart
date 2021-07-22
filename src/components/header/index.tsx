@@ -64,7 +64,7 @@ function Header() {
                     <Icon onClick={() => { }} icon={<IShoppingCart />} />
                 </Link>
 
-                <Link to="/usuario" className='link'>
+                <Link to={!!auth?.isAuth ? '/' : '/usuario'} className='link'>
                     <Icon className="user" onClick={() => { }} icon={<IUser />}>
                         {!!auth?.isAuth ? auth.user?.name : 'Entrar'}
                     </Icon>
