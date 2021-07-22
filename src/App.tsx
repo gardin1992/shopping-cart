@@ -16,8 +16,6 @@ import PublicRoute from './components/route/PublicRoute';
 import OrderScreen from './screens/orders/OrderScreen';
 import ConfirmScreen from './screens/orders/ConfirmScreen';
 
-import GlobalStyle from './styles';
-
 function App() {
 
   return (

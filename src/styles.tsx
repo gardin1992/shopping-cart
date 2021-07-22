@@ -46,6 +46,10 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.secondary};
     margin: 50px 0 30px;
   }
+
+  table {
+    max-height: 100% !important;
+  }
 `
 
 export default GlobalStyle;

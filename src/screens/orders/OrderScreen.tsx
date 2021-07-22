@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Input from '../../components/input'
@@ -33,54 +34,47 @@ function OrderScreen() {
         city: "",
     })
 
-    const requestOrders = React.useCallback(() => {
+
+    const requestOrders = useCallback(() => {
         const onSuccess = (e: any) => {
             const result = e.target.result
-            setItems(result)
+
+            if (!!filter.name || !!filter.cpf || !!filter.city) {
+
+                let filtered = result
+
+                if (!!filter.name) {
+                    const name = filter.name.toLocaleLowerCase()
+                    filtered = filtered.filter((i: any) => i?.user?.name.toLocaleLowerCase().includes(name))
+                }
+
+                if (!!filter.cpf) {
+                    const cpf = filter.cpf.toLocaleLowerCase()
+                    filtered = filtered.filter((i: any) => i?.user?.cpf?.toLocaleLowerCase().includes(cpf))
+                }
+
+                if (!!filter.city) {
+                    const city = filter.city.toLocaleLowerCase()
+                    filtered = filtered.filter((i: any) => i?.user?.city.toLocaleLowerCase().includes(city))
+                }
+
+                setItems(filtered)
+            } else {
+                setItems(result)
+            }
         }
         const onError = (e: any) => {
             console.log('erro ao buscar pedidos')
         }
 
-        if (!!indexedStore.connection) {
-            indexedStore.getAll('purchases', onSuccess, onError)
-        }
-    }, [indexedStore])
+        indexedStore.getAll('purchases', onSuccess, onError)
+    }, [filter, indexedStore]) 
 
     React.useEffect(() => {
-        requestOrders()
-    }, [requestOrders, indexedStore.connection])
-
-    const handleFilter = () => {
-        if (!!filter.name || !!filter.cpf || !!filter.city) {
-
-            let filtered = items
-
-
-
-            if (!!filter.name && filter.name !== "") {
-                const name = filter.name.toLocaleLowerCase()
-                filtered = filtered.filter((i: any) => i?.user?.name.toLocaleLowerCase().includes(name))
-            }
-
-            if (!!filter.cpf && filter.cpf !== "") {
-                console.log(filter)
-                const cpf = filter.cpf.toLocaleLowerCase()
-                filtered = filtered.filter((i: any) => i?.user?.cpf?.toLocaleLowerCase().includes(cpf))
-            }
-
-            if (!!filter.city && filter.city !== "") {
-                console.log(filter)
-                const city = filter.city.toLocaleLowerCase()
-                filtered = filtered.filter((i: any) => i?.user?.city.toLocaleLowerCase().includes(city))
-            }
-
-            setItems(filtered)
-        } else {
+        if (!!indexedStore.connection) {
             requestOrders()
         }
-    }
-
+    }, [requestOrders, indexedStore.connection])
 
     return <div className="fluid">
 
@@ -118,8 +112,6 @@ function OrderScreen() {
                 value={filter.city}
                 type="text"
             />
-
-            <button onClick={handleFilter}>Filtrar</button>
         </CFilter>
         <table>
             <thead>
