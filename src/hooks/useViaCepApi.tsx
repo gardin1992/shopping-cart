@@ -14,7 +14,7 @@ export interface IViaCepResponseDTO {
     state: string,
 }
 
-function ViaCepApi() {
+function useViaCepApi() {
 
     const requestViaCep = async (postalCode: string) => {
         try {
@@ -36,7 +36,7 @@ function ViaCepApi() {
                     return {
                         postalCode,
                         streetName: response.logradouro,
-                        streetNumber: response.localidade,
+                        city: response.localidade,
                         neighborhood: response.bairro,
                         state: response.uf
                     }
@@ -48,4 +48,4 @@ function ViaCepApi() {
     }
 }
 
-export default ViaCepApi
+export default useViaCepApi

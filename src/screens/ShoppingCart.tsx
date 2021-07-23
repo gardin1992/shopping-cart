@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 
 import ProductShoppingCart from "../components/product/product-shopping-cart";
-import IndexedDbStore from "../helpers/indexedDBStore";
+import useIndexedStore from "../hooks/useIndexedStore";
 import { IShoppingCart, IShoppingCartItem } from "../interfaces";
 import { toDecimal } from "../mask";
 import { resetState } from "../reducers/shoppingCartSlicer";
@@ -70,11 +70,11 @@ const CButton = styled.button`
 `
 
 function ShoppingCart() {
+    const history = useHistory()
+    const indexedStore = useIndexedStore()
+
     const stateItems = useSelector((state: { shoppingCart: IShoppingCart }) => state.shoppingCart.items)
     const auth = useSelector((state: { authentication: any }) => state.authentication)
-
-    const history = useHistory()
-    const indexedStore = IndexedDbStore()
 
     const [sale, setSale] = React.useState({
         subTotal: 0,

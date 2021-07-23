@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Input from '../../components/input'
-import IndexedDbStore from '../../helpers/indexedDBStore'
+import useIndexedStore from '../../hooks/useIndexedStore'
 import { toDecimal } from '../../mask'
 import { theme } from '../../styles'
 
@@ -26,7 +26,7 @@ const CTitle = styled.div`
 function OrderScreen() {
     const [items, setItems] = React.useState([])
 
-    const indexedStore = IndexedDbStore()
+    const indexedStore = useIndexedStore()
 
     const [filter, setFilter] = React.useState({
         name: "",

@@ -15,7 +15,7 @@ export const purchaseSchema = {
 }
 
 
-function IndexedDbStore() {
+function useIndexedStore() {
     const [connection, setConnection] = React.useState<IDBDatabase | null>(null)
     const IndxDB: IDBFactory = window.indexedDB
 
@@ -38,21 +38,8 @@ function IndexedDbStore() {
         };
 
         openRequest.onsuccess = (e: any) => {
-            console.log('Conexão realizada com sucesso');
-            // e.target.result é uma instância de IDBDatabase
             setConnection(e.target.result)
 
-            // var request = db.transaction(["clientes"], "readwrite")
-            //     .objectStore("clientes")
-            //     .delete(1);
-
-            // request.onsuccess = function (event: any) {
-            //     // Pronto!
-            // };
-
-            // request.onerror = function (event: any) {
-            //     console.log('error', event.target.error)
-            // }
         };
 
         openRequest.onerror = (e: any) => {
@@ -137,13 +124,33 @@ function IndexedDbStore() {
                 request.onerror = onError;
         }
     }
+
+    const deleteById = (
+        storeName: string,
+        id: number,
+        onSuccess: (e: any) => void,
+        onError: (e: any) => void,
+    ) => {
+        if (!!connection) {
+            const transaction = connection.transaction([storeName], "readwrite");
+            const request = transaction.objectStore(storeName).delete(id);
+
+            if (!!onSuccess)
+                request.onsuccess = onSuccess;
+
+            if (!!onError)
+                request.onerror = onError;
+        }
+    }
+
     return {
         connection,
         insertData,
         getDataById,
         getDataByIndex,
         getAll,
+        deleteById,
     }
 }
 
-export default IndexedDbStore
+export default useIndexedStore

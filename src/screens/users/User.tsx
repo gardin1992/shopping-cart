@@ -5,18 +5,17 @@ import { ReactComponent as IEmail } from '../../assets/icons/i-email.svg'
 import { ReactComponent as IPassword } from '../../assets/icons/i-password.svg'
 import { ReactComponent as IContact } from '../../assets/icons/i-contact.svg'
 
-import ViaCepApi, { IViaCepResponseDTO } from '../../helpers/viaCepApi'
-
 import * as S from './styles'
 import { requiredField } from '../../helpers/strings'
 import { IUserLogin, IUserRegister } from '../../interfaces/users'
 import Input from '../../components/input'
-import IndexedDbStore, { userSchema } from '../../helpers/indexedDBStore'
+import useIndexedStore, { userSchema } from '../../hooks/useIndexedStore'
 import { useHistory } from 'react-router'
 
 import { useDispatch } from 'react-redux'
 import { authorize } from '../../reducers/authenticationSlicer'
 import { CModal } from '../../components/modal'
+import useViaCepApi, { IViaCepResponseDTO } from '../../hooks/useViaCepApi'
 
 const initialUserRegister: IUserRegister = {
     name: "",
@@ -38,21 +37,21 @@ const initialUserLogin = {
 }
 
 function User() {
+    const viaCepApi = useViaCepApi()
+    const indexDbStore = useIndexedStore()
+    const history = useHistory()
 
     const [userLogin, setUserLogin] = React.useState<IUserLogin>(initialUserLogin)
     const [userRegister, setUserRegister] = React.useState<IUserRegister>(initialUserRegister)
     const [userRegisterErrors, setUserRegisterErrors] = React.useState<IUserRegister>({})
     const [userLoginError, setUserLoginError] = React.useState<IUserLogin>({})
 
-    const useViaCepApi = ViaCepApi()
-    const indexDbStore = IndexedDbStore()
-    const history = useHistory()
 
     const dispatch = useDispatch()
 
     const requestAddress = (postalCode: string) => {
 
-        useViaCepApi.getByPostalCode(postalCode)
+        viaCepApi.getByPostalCode(postalCode)
             .then(resp => {
                 if (!!resp) {
                     const data: IViaCepResponseDTO = resp
@@ -128,18 +127,16 @@ function User() {
     const handleUserLogin = () => {
         const onSuccess = (e: any) => {
             const user = e.target.result
-            console.log(e.target.result)
 
-            if (!user) {
-                alert('Usuário ou senha incorreto')
-            } else {
+            if (!!user && user.password === userLogin.password) {
                 dispatch(authorize(user))
                 history.push('/carrinho')
-            }
+            } else
+                alert('Usuário ou senha incorreto')
         }
 
         const onError = (e: any) => {
-            console.log('erro logar usuário', e.target.error);
+            alert(`Erro ao logar usuário ${e.target.error}`);
         }
 
         if (!!indexDbStore.connection)
@@ -152,7 +149,7 @@ function User() {
         }
 
         const onError = (e: any) => {
-            console.log('erro ao adicionar usuário', e.target.error);
+            alert(`Erro ao adicionar usuário ${e.target.error}`);
         }
 
         if (!!indexDbStore.connection)

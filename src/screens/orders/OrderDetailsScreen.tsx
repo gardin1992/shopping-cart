@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useParams } from 'react-router-dom';
-import IndexedDbStore from '../../helpers/indexedDBStore';
+import useIndexedStore from '../../hooks/useIndexedStore';
 import { toDecimal } from '../../mask';
 
 /*
@@ -10,8 +10,8 @@ Ao clicarmos no pedido dever ter a possibilidade de visualizar os detalhes (Iten
 
  */
 function OrderDetailsScreen() {
+    const indexedStore = useIndexedStore()
 
-    const indexedStore = IndexedDbStore()
     let { id } = useParams<any>();
 
     const [order, setOrder] = React.useState<any>()
