@@ -1,16 +1,12 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
-
 import { useDispatch } from 'react-redux'
-
-import { addItem } from '../reducers/shoppingCartSlicer';
-
 import styled from 'styled-components'
 
+import { addItem } from '../reducers/shoppingCartSlicer';
 import Banner from "../components/banner";
 import ProductShowcase from "../components/product/product-showcase/ProductShowcase";
 import { IProduct } from "../interfaces";
-import IndexedDbStore, {userSchema} from '../helpers/indexedDBStore'
 
 const product: IProduct = {
     category: 'cadeira gamer',
@@ -29,12 +25,9 @@ flex-wrap: wrap;
 `
 
 function Home() {
-
-    const indexDbStore = IndexedDbStore()
     const [productList, setProductList] = React.useState<IProduct[]>([])
 
     const history = useHistory();
-
 
     const requestApi = async (callback: (data: IProduct[]) => void) => {
         try {
@@ -50,16 +43,7 @@ function Home() {
         requestApi(setProductList)
     }, [])
 
-    React.useEffect(() => {
-        if (!!indexDbStore.connection) {
-            indexDbStore.insertData(userSchema.name, { ssn: "666-66-6666", nome: "John", idade: 29, email: "gardin1992@gmail.com" }, (e: any) => { }, (e: any) => {
-                console.log('e', e.target.error)
-            })
-        }
-    }, [indexDbStore, indexDbStore.connection])
-
     const results = productList.length ?? 0;
-
     const dispatch = useDispatch()
 
     const addItemToCart = (product: IProduct) => {

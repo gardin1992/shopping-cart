@@ -84,25 +84,28 @@ function ShoppingCart() {
     })
 
     React.useEffect(() => {
-
         if (!!stateItems.length) {
-            let reduced = stateItems.reduce((previosValue, currentValue) => {
-                const _value = currentValue.price * currentValue.amount
-                const _value1 = previosValue.price * previosValue.amount
 
-                return {
-                    ...currentValue,
-                    price: _value + _value1,
-                    amount: previosValue.amount + currentValue.amount
-                }
+            let amount = 0;
+            let subTotal = 0;
+            let discount = 0;
+            let total = 0;
+
+            stateItems.forEach((item: IShoppingCartItem) => {
+                const _subTotal = item.amount * item.price;
+                const _discount = _subTotal * 12 / 100
+
+                amount += item.amount
+                subTotal += _subTotal
+                discount += _discount
+                total += _subTotal - _discount
             })
-            const perDiscountPrice = reduced.price * 12 / 100
 
             setSale({
-                subTotal: reduced.price,
-                amount: reduced.amount,
-                total: reduced.price - perDiscountPrice,
-                discount: perDiscountPrice,
+                subTotal,
+                amount,
+                total,
+                discount,
             })
         }
     }, [stateItems, stateItems.length])
